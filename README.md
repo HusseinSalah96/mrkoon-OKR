@@ -24,23 +24,22 @@ A comprehensive OKR (Objectives and Key Results) and Performance Evaluation Syst
 ## 🛠️ How to Run
 
 ### Prerequisites
-- Node.js (v18+)
-- NPM or Yarn
+- Bun (v1.0+)
 
 ### 1. Setup Backend
 ```bash
 cd apps/backend
-npm install
-npx prisma migrate dev  # Initialize Database
-npm run start:dev       # Start Server on http://localhost:3000
+bun install
+bunx prisma migrate dev  # Initialize Database
+bun run start:dev       # Start Server on http://localhost:3000
 ```
-*Note: Default Admin Account may need seeding or created via `npx prisma studio`.*
+*Note: Default Admin Account may need seeding or created via `bunx prisma studio`.*
 
 ### 2. Setup Frontend
 ```bash
 cd apps/frontend
-npm install
-npm run dev             # Start Client on http://localhost:5173
+bun install
+bun run dev             # Start Client on http://localhost:5173
 ```
 
 ---

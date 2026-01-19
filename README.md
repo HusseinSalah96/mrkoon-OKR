@@ -131,3 +131,48 @@ The system is built around a hierarchical evaluation model involving **Admins**,
 - **Password Hashing**: Bcrypt for secure storage.
 - **API Guards**: Endpoints verify `req.user` role before returning sensitive data.
 - **Data Scoping**: Services explicitly filter queries based on the requesting user's ID and Role.
+
+## 🚢 Deployment Guide
+
+### Using Docker (Self-Hosted / VPS)
+
+1.  **Build Images**:
+    ```bash
+    docker-compose build
+    ```
+    
+2.  **Run Containers**:
+    ```bash
+    docker-compose up -d
+    ```
+
+3.  **Access**:
+    - Frontend: `http://localhost:8080`
+    - Backend: `http://localhost:3000`
+
+### ☁️ Recommended Free Hosting
+
+#### 1. Database (PostgreSQL)
+*   **[Neon.tech](https://neon.tech)** (Recommended): Offers a generous free tier for Serverless PostgreSQL.
+*   **Supabase**: Excellent alternative.
+
+#### 2. Backend (API)
+*   **[Render](https://render.com)**:
+    *   Create a **Web Service**.
+    *   Connect GitHub Repo.
+    *   Runtime: **Docker**.
+    *   Root Directory: `.` (Current directory)
+    *   Docker Context: `.`
+    *   Dockerfile Path: `apps/backend/Dockerfile`
+    *   **Environment Variables**: Add `DATABASE_URL`, `JWT_SECRET`, etc.
+
+#### 3. Frontend (UI)
+*   **[Vercel](https://vercel.com)** (Best for React):
+    *   Import GitHub Repo.
+    *   Root Directory: `apps/frontend`.
+    *   Build Command: `bun run build`.
+    *   Output Directory: `dist`.
+    *   **Environment Variables**: Add `VITE_API_URL` pointing to your Render Backend URL.
+
+---
+

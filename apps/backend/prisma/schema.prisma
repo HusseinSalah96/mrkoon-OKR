@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("EMPLOYEE")
+  avatar    String?
+  
+  // Relations
+  teamId    Int?
+  team      Team?    @relation("TeamMembers", fields: [teamId], references: [id])
+  
+  managedTeams Team[] @relation("TeamManager")
+
+  evaluations Evaluation[]
+  activityLogs ActivityLog[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ActivityLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  action    String
+  details   String?
+  createdAt DateTime @default(now())
+}
+
+
+model Team {
+  id        Int      @id @default(autoincrement())
+  name      String
+  
+  managerId Int?
+  manager   User?    @relation("TeamManager", fields: [managerId], references: [id])
+  
+  members   User[]   @relation("TeamMembers")
+  
+  kpiGroups KpiGroup[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model KpiGroup {
+  id          Int       @id @default(autoincrement())
+  name        String
+  weight      Float // Percentage 0-100 check constraint conceptually
+  
+  teamId      Int?
+  team        Team?     @relation(fields: [teamId], references: [id])
+  
+  items       KpiItem[]
+  
+  comments    EvaluationComment[]
+
+  targetRole  String    @default("EMPLOYEE") // EMPLOYEE or MANAGER
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model KpiItem {
+  id        Int      @id @default(autoincrement())
+  name      String
+  weight    Float
+  
+  kpiGroupId Int
+  kpiGroup   KpiGroup @relation(fields: [kpiGroupId], references: [id])
+  
+  scores    EvaluationItem[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Evaluation {
+  id        Int      @id @default(autoincrement())
+  quarter   String   // e.g., "Q1"
+  year      Int
+  
+  employeeId Int
+  employee   User    @relation(fields: [employeeId], references: [id])
+  
+  items     EvaluationItem[]
+  comments  EvaluationComment[]
+  
+  isSubmitted Boolean @default(false)
+  
+  @@unique([quarter, year, employeeId])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model EvaluationItem {
+  id        Int      @id @default(autoincrement())
+  score     Float
+  
+  evaluationId Int
+  evaluation   Evaluation @relation(fields: [evaluationId], references: [id])
+  
+  kpiItemId Int
+  kpiItem   KpiItem @relation(fields: [kpiItemId], references: [id])
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([evaluationId, kpiItemId])
+}
+
+model EvaluationComment {
+  id        Int      @id @default(autoincrement())
+  comment   String
+  
+  evaluationId Int
+  evaluation   Evaluation @relation(fields: [evaluationId], references: [id])
+  
+  kpiGroupId Int
+  kpiGroup   KpiGroup @relation(fields: [kpiGroupId], references: [id])
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([evaluationId, kpiGroupId])
+}

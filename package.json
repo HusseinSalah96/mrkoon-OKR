@@ -1,0 +1,1 @@
+{"name": "okr-system-monorepo", "private": true, "workspaces": ["apps/*"]}

@@ -1,0 +1,11 @@
+node_modules
+dist
+.git
+.env
+.DS_Store
+apps/backend/node_modules
+apps/backend/dist
+apps/frontend/node_modules
+apps/frontend/dist
+apps/backend/dev.db
+apps/backend/dev.db-journal

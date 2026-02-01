@@ -7,7 +7,7 @@ let app: NestExpressApplication;
 
 export default async function handler(req: any, res: any) {
     // Manually handle CORS
-    res.setHeader('Access-Control-Allow-Origin', 'https://mrkoon-okr-frontend.vercel.app');
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS,PATCH');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept, X-Requested-With');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -22,9 +22,7 @@ export default async function handler(req: any, res: any) {
         app = await NestFactory.create<NestExpressApplication>(AppModule);
         app.enableCors({
             origin: [
-                'https://mrkoon-okr-frontend.vercel.app',
-                'http://localhost:5173',
-                'http://localhost:3000',
+                '*',
             ],
             methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
             credentials: true,

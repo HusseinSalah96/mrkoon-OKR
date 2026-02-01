@@ -7,7 +7,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.enableCors({
     origin: [
-      'https://mrkoon-okr-frontend.vercel.app',
+      '*',
       'http://localhost:5173',
       'http://localhost:3000',
     ],

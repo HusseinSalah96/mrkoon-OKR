@@ -13,7 +13,8 @@ export default async function handler(req: any, res: any) {
     res.setHeader('Access-Control-Allow-Credentials', 'true');
 
     if (req.method === 'OPTIONS') {
-        res.status(200).end();
+        res.statusCode = 200;
+        res.end();
         return;
     }
 

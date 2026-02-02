@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { getAssetsUrl } from '../../api/client';
 import { api } from '../../api/client';
 import { Plus, Loader2 } from 'lucide-react';
 import { clsx } from 'clsx';
@@ -158,7 +159,7 @@ export const AdminUsersPage = () => {
                         <div className="flex items-center gap-4 mb-2">
                              <div className="h-12 w-12 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold overflow-hidden">
                                 {users.find(u => u.id === editingUserId)?.avatar ? (
-                                    <img src={`http://localhost:3000${users.find(u => u.id === editingUserId)?.avatar}`} alt="Avatar" className="h-full w-full object-cover" />
+                                    <img src={getAssetsUrl(users.find(u => u.id === editingUserId)?.avatar)} alt="Avatar" className="h-full w-full object-cover" />
                                 ) : (
                                     name.charAt(0)
                                 )}
@@ -243,7 +244,7 @@ export const AdminUsersPage = () => {
                                     <div className="flex items-center gap-3">
                                         <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-xs font-bold text-white overflow-hidden">
                                             {user.avatar ? (
-                                                <img src={`http://localhost:3000${user.avatar}`} alt={user.name} className="h-full w-full object-cover" />
+                                                <img src={getAssetsUrl(user.avatar)} alt={user.name} className="h-full w-full object-cover" />
                                             ) : (
                                                 user.name.charAt(0)
                                             )}

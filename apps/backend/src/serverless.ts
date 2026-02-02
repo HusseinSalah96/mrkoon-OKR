@@ -5,36 +5,44 @@ import { join } from 'path';
 
 let app: NestExpressApplication;
 
+const ALLOWED_ORIGINS = [
+    'http://localhost:5173',
+    'https://mrkoon-okr-frontend.vercel.app',
+];
+
 export default async function handler(req: any, res: any) {
-    // Manually handle CORS
-    const origin = req.headers.origin || '*';
-    res.setHeader('Access-Control-Allow-Origin', origin);
-    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS,PATCH');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept, X-Requested-With');
+    const origin = req.headers.origin;
+
+    if (ALLOWED_ORIGINS.includes(origin)) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+    }
+
+    res.setHeader(
+        'Access-Control-Allow-Methods',
+        'GET,POST,PUT,PATCH,DELETE,OPTIONS',
+    );
+    res.setHeader(
+        'Access-Control-Allow-Headers',
+        'Content-Type, Authorization',
+    );
     res.setHeader('Access-Control-Allow-Credentials', 'true');
 
-
-    // DEBUG LOGS
-    console.log('Incoming Request:', req.method, req.url);
-    console.log('Origin Header:', req.headers.origin);
-    console.log('Computed Allow-Origin:', origin);
-
+    // Handle preflight requests
     if (req.method === 'OPTIONS') {
-        res.statusCode = 200;
-        res.end();
+        res.status(204).end();
         return;
     }
 
     if (!app) {
         app = await NestFactory.create<NestExpressApplication>(AppModule);
-        // REMOVED app.enableCors() to avoid double-setting headers
 
-        // Static assets might behave differently in serverless, but we keep the config
         app.useStaticAssets(join(process.cwd(), 'uploads'), {
             prefix: '/uploads/',
         });
+
         await app.init();
     }
+
     const expressApp = app.getHttpAdapter().getInstance();
     return expressApp(req, res);
 }

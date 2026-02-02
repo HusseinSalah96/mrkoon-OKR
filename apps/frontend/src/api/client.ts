@@ -5,6 +5,14 @@ export const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
 });
 
+export const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+export const getAssetsUrl = (path?: string) => {
+    if (!path) return '';
+    if (path.startsWith('http')) return path;
+    return `${API_URL}${path.startsWith('/') ? '' : '/'}${path}`;
+};
+
 api.interceptors.request.use((config) => {
     const token = useAuthStore.getState().token;
     if (token) {

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { api } from '../api/client';
 import { useParams } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
+import { getAssetsUrl } from '../api/client';
 import { Layers, BarChart3, Mail, Briefcase, Camera } from 'lucide-react';
 
 interface KPIItem {
@@ -133,7 +134,7 @@ export const UserProfilePage = () => {
                         <div className="relative group">
                             <div className="h-24 w-24 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-4xl font-bold text-white shadow-xl overflow-hidden">
                                 {user?.avatar ? (
-                                    <img src={`http://localhost:3000${user.avatar}`} alt={user.name} className="h-full w-full object-cover" />
+                                    <img src={getAssetsUrl(user.avatar)} alt={user.name} className="h-full w-full object-cover" />
                                 ) : (
                                     user?.name.charAt(0)
                                 )}

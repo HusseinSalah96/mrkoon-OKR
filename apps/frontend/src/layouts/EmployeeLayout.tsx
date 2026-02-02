@@ -1,4 +1,5 @@
 
+import { getAssetsUrl } from '../api/client';
 import { useAuthStore } from '../store/authStore';
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { LayoutDashboard, LogOut } from 'lucide-react';
@@ -52,7 +53,7 @@ export const EmployeeLayout = () => {
                     <div className="flex items-center gap-3 mb-4 px-2">
                         {user?.avatar ? (
                              <img 
-                                src={`http://localhost:3000${user.avatar}`} 
+                                src={getAssetsUrl(user.avatar)} 
                                 alt={user.name} 
                                 className="h-10 w-10 rounded-full object-cover border border-white/10"
                             />

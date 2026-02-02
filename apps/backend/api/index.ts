@@ -37,6 +37,7 @@ export default async function handler(req: any, res: any) {
 
     if (!app) {
         app = await NestFactory.create<NestExpressApplication>(AppModule);
+        app.setGlobalPrefix('api');
         await app.init();
     }
 

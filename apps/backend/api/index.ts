@@ -13,6 +13,9 @@ const ALLOWED_ORIGINS = [
 export default async function handler(req: any, res: any) {
     const origin = req.headers.origin;
 
+    // 🔑 REQUIRED FOR VERCEL EDGE CACHE
+    res.setHeader('Vary', 'Origin');
+
     if (ALLOWED_ORIGINS.includes(origin)) {
         res.setHeader('Access-Control-Allow-Origin', origin);
     }
@@ -27,7 +30,7 @@ export default async function handler(req: any, res: any) {
     );
     res.setHeader('Access-Control-Allow-Credentials', 'true');
 
-    // Handle preflight requests
+    // Handle preflight
     if (req.method === 'OPTIONS') {
         res.status(204).end();
         return;

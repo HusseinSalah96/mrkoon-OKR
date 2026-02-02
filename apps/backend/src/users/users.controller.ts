@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, UseGuards, Param, Patch, Delete, ForbiddenException, NotFoundException, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
+import { put } from '@vercel/blob';
 import { UsersService } from './users.service';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
@@ -60,18 +59,10 @@ export class UsersController {
     }
 
     @Post(':id/avatar')
-    @UseInterceptors(FileInterceptor('file', {
-        storage: diskStorage({
-            destination: './uploads',
-            filename: (req, file, cb) => {
-                const randomName = Array(32).fill(null).map(() => (Math.round(Math.random() * 16)).toString(16)).join('');
-                return cb(null, `${randomName}${extname(file.originalname)}`);
-            }
-        })
-    }))
-    async uploadAvatar(@Param('id') id: string, @UploadedFile() file: any) {
-        const avatarUrl = `/uploads/${file.filename}`;
-        await this.usersService.update(+id, { avatar: avatarUrl });
-        return { avatarUrl };
+    @UseInterceptors(FileInterceptor('file'))
+    async uploadAvatar(@Param('id') id: string, @UploadedFile() file: Express.Multer.File) {
+        const { url } = await put(file.originalname, file.buffer, { access: 'public', token: process.env.BLOB_READ_WRITE_TOKEN });
+        await this.usersService.update(+id, { avatar: url });
+        return { avatarUrl: url };
     }
 }

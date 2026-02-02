@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '../src/app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { join } from 'path';
 
 let app: NestExpressApplication;
 
@@ -38,11 +37,6 @@ export default async function handler(req: any, res: any) {
 
     if (!app) {
         app = await NestFactory.create<NestExpressApplication>(AppModule);
-
-        app.useStaticAssets(join(process.cwd(), 'uploads'), {
-            prefix: '/uploads/',
-        });
-
         await app.init();
     }
 

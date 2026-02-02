@@ -13,6 +13,12 @@ export default async function handler(req: any, res: any) {
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept, X-Requested-With');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
 
+
+    // DEBUG LOGS
+    console.log('Incoming Request:', req.method, req.url);
+    console.log('Origin Header:', req.headers.origin);
+    console.log('Computed Allow-Origin:', origin);
+
     if (req.method === 'OPTIONS') {
         res.statusCode = 200;
         res.end();
@@ -21,19 +27,16 @@ export default async function handler(req: any, res: any) {
 
     if (!app) {
         app = await NestFactory.create<NestExpressApplication>(AppModule);
-        app.enableCors({
-            origin: [
-                '*',
-            ],
-            methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-            credentials: true,
-        });
+        // REMOVED app.enableCors() to avoid double-setting headers
+
         // Static assets might behave differently in serverless, but we keep the config
         app.useStaticAssets(join(process.cwd(), 'uploads'), {
             prefix: '/uploads/',
         });
         await app.init();
     }
-    const expressApp = app.getHttpAdapter().getInstance();
-    return expressApp(req, res);
+    await app.init();
+}
+const expressApp = app.getHttpAdapter().getInstance();
+return expressApp(req, res);
 }

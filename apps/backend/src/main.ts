@@ -10,6 +10,7 @@ async function bootstrap() {
     origin: [
       'http://localhost:5173',
       'https://mrkoon-okr-frontend.vercel.app',
+      'https://mrkoon-okr.vercel.app',
     ],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     credentials: true,

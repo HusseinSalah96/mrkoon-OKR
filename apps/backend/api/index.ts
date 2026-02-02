@@ -7,6 +7,7 @@ let app: NestExpressApplication;
 const ALLOWED_ORIGINS = [
     'http://localhost:5173',
     'https://mrkoon-okr-frontend.vercel.app',
+    'https://mrkoon-okr.vercel.app',
 ];
 
 export default async function handler(req: any, res: any) {
